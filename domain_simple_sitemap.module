@@ -1,41 +1,68 @@
 <?php
 
 /**
- * @file
- * Module file for Domain access sitemap module.
- */
-
-use Drupal\Core\Entity\EntityInterface;
-
-/**
  * Implements hook_ENTITY_TYPE_insert().
  */
-function domain_simple_sitemap_domain_insert(EntityInterface $domain) {
-  // Regenerate sitemap on add/edit/delete new domain.
-  \Drupal::service('simple_sitemap.generator')->generateSitemap();
+function domain_simple_sitemap_domain_insert(\Drupal\Core\Entity\EntityInterface $domain) {
+  /** @var \Drupal\simple_sitemap\Simplesitemap $simpleSitemap */
+  $simpleSitemap = \Drupal::service('simple_sitemap.generator');
+			 $id = $domain->id();
+
+  // Create variant
+  $manager = $simpleSitemap->getSitemapManager();
+  $manager->addSitemapVariant($id, ['type' => 'domain', 'label' => $domain->label()]);
+
+  // Create site maps
+  $generator = $manager->getSitemapGenerator('default');
+  $generator->setSitemapVariant($id);
+  $generator->setSettings(['excluded_languages' => [], 'xsl' => TRUE]);
+  $generator->remove();
+
+  if ($domain->status()) {
+    $generator->generate([]);
+    $generator->publish();
+  }
 }
 
 /**
  * Implements hook_ENTITY_TYPE_update().
  */
-function domain_simple_sitemap_domain_update(EntityInterface $domain) {
-  if ($domain->status() !== $domain->get('original')->status()) {
-    domain_simple_sitemap_domain_insert($domain);
+function domain_simple_sitemap_domain_update(\Drupal\Core\Entity\EntityInterface $domain) {
+	if($domain->isActive()){
+		if ($domain->status()) {
+		  domain_simple_sitemap_domain_insert($domain);
+		}
+		else {
+		  domain_simple_sitemap_domain_delete($domain);
+		}											
   }
-}
-
+  /* To Check
+  if($domain->isActive() && ($domain->status() !== $domain->get('original')->status() || $domain->getHostname() !== $domain->get('original')->getHostname() || $domain->label() !== $domain->get('original')->label() || $domain->getScheme() !== $domain->get('original')->getScheme())) {
+		domain_simple_sitemap_domain_insert($domain);
+	}
+  
+		   
+	elseif(!$domain->isActive() && $domain->status() !== $domain->get('original')->status()){
+		domain_simple_sitemap_domain_delete($domain);
+	}
+   
+*/
+}	
 /**
  * Implements hook_ENTITY_TYPE_delete().
  */
-function domain_simple_sitemap_domain_delete(EntityInterface $domain) {
-  domain_simple_sitemap_domain_insert($domain);
-}
+function domain_simple_sitemap_domain_delete(\Drupal\Core\Entity\EntityInterface $domain) {
+  /** @var \Drupal\simple_sitemap\Simplesitemap $simpleSitemap */
+  $simpleSitemap = \Drupal::service('simple_sitemap.generator');
+	 $id = $domain->id();
 
-/**
- * Implements hook_simple_sitemap_url_generators_alter().
- */
-function domain_simple_sitemap_simple_sitemap_url_generators_alter(array &$generators) {
-  // Remove entity & custom generators to use our own domain generators.
-  unset($generators['entity']);
-  unset($generators['custom']);
+  // Remove variant
+  $manager = $simpleSitemap->getSitemapManager();
+  $manager->removeSitemapVariants([$id]);
+
+  // Remove sitemap
+  $generator = $manager->getSitemapGenerator('default');
+  $generator->setSitemapVariant($id);
+  $generator->setSettings(['excluded_languages' => []]);
+  $generator->remove();
 }

@@ -14,6 +14,8 @@
   "authors": [
     { "name": "Mladen Stankovic a.k.a euphoric_mv", "email": "mstankovic@adyax.com" },
     { "name": "Ruben Egiguren a.k.a keopx", "email": "keopx@keopx.net" }
+	{ "name": "Bram Goffings a.k.a aspilicious", "email": "" }
+	{ "name": "Ambroise Nicolas a.k.a nambroise" , "email": "info@nicolasambroise.com"}
   ],
   "require": { }
 }

@@ -1,0 +1,6 @@
+domain_simple_sitemap.settings:
+  title: Domain simple sitemap settings
+  route_name: domain_simple_sitemap.settings
+  description: 'Manage sitemap filter setting for domains.'
+  parent: domain.admin
+  weight: 10

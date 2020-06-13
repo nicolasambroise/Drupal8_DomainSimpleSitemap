@@ -1,0 +1,4 @@
+domain_simple_sitemap.settings:
+  title: Domain sitemap
+  route_name: domain_simple_sitemap.settings
+  base_route: domain.admin

@@ -14,7 +14,7 @@ function domain_simple_sitemap_drush_command() {
   $items['adas-generate'] = [
     'description' => 'Regenerate XML sitemaps for all languages and domains according to the module settings.',
     'callback' => 'drush_domain_simple_sitemap_generate',
-    'drupal dependencies' => ['simple_sitemap', 'domain_simple_sitemap'],
+    'drupal dependencies' => ['simple_sitemap', 'domain', 'domain_simple_sitemap'],
   ];
   return $items;
 }

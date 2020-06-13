@@ -1,0 +1,7 @@
+domain_simple_sitemap.settings:
+  path: '/admin/config/domain/domain_simple_sitemap/config'
+  defaults:
+    _form: '\Drupal\domain_simple_sitemap\Form\DomainSimpleSitemapConfigForm'
+    _title: 'Domain simple sitemap configuration'
+  requirements:
+    _permission: 'administer domains'

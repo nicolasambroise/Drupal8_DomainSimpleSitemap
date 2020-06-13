@@ -1,36 +1,25 @@
 <?php
 
 /**
- * @file
- * Installation file with functions for Domain Access Sitemap.
- */
-
-use Drupal\Core\Database\Database;
-
-/**
  * Implements hook_install().
+ *
+ * Installs the default domain field on nodes. We don't do this via schema.yml
+ * files because we have an unknown number of node types.
  */
 function domain_simple_sitemap_install() {
-  // Create new field domain_id in simple_sitemap table.
-  $spec = [
-    'type' => 'varchar',
-    'description' => "Domain ID",
-    'length' => 100,
-    'not null' => FALSE,
-  ];
-  $schema = Database::getConnection()->schema();
-  $schema->addField('simple_sitemap', 'domain_id', $spec);
-
-  // Add sitemaps.
-  Database::getConnection()->truncate('simple_sitemap')->execute();
+  if (\Drupal::isConfigSyncing()) {
+    // Configuration is assumed to already be checked by the config importer
+    // validation events.
+    return;
+  }
 }
 
 /**
- * Implements hook_uninstall().
+ * Add the setting to open the domain access fieldset.
  */
-function domain_simple_sitemap_uninstall() {
-  // Remove domain_id column and truncate table simple_sitemap.
-  $schema = Database::getConnection()->schema();
-  $schema->dropField('simple_sitemap', 'domain_id');
-  Database::getConnection()->truncate('simple_sitemap')->execute();
+function domain_simple_sitemap_update_8001() {
+  $config_factory = \Drupal::configFactory();
+  $config = $config_factory->getEditable('domain_simple_sitemap.settings');
+  $config->set('domain_simple_sitemap_filter', 0);
+  $config->save(TRUE);
 }
