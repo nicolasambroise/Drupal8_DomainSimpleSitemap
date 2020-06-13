@@ -1,0 +1,14 @@
+name: Domain Access Simple Sitemap
+type: module
+description: Module for generating sitemaps on domains with Domain Access module.
+# core: 8.x
+package: SEO
+dependencies:
+  - simple_sitemap:simple_sitemap
+  - domain:domain_access
+
+# Information added by Drupal.org packaging script on 2018-12-18
+version: '8.x-1.0-rc6+0-dev'
+core: '8.x'
+project: 'domain_simple_sitemap'
+datestamp: 1545118384
