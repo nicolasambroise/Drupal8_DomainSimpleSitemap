@@ -22,3 +22,7 @@ Configuration page path:
 -------------
     - Domain Access
 	- Simple Sitemap
+	
+### Installation
+-------------
+Install with Composer: $ composer require 'drupal/domain_simple_sitemap:2.x-dev'
